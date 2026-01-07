@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Pop Entries</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container-wide">
+
+        <div class="back-link">
+            <a href="/">← Back to Form</a>
+        </div>
+
+        <h1 class="main-title">T-Pop Entries</h1>
+        <p class="main-subtitle">See what other fans love</p>
+
+        <div class="entries-grid">
+
+            {% for entry in entries %}
+            <div class="entry-card">
+
+                <div class="entry-header">
+                    <p class="fan-name">{{ entry.name }}</p>
+                    <p class="group-name">{{ entry.fav_group }}</p>
+                    <span class="stan-badge">Stan since: {{ entry.stan_since }}</span>
+                </div>
+
+                <div class="entry-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Bias:</span>
+                        <span class="detail-value">{{ entry.bias }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Bias Wrecker:</span>
+                        <span class="detail-value">{{ entry.bias_wrecker }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Songs:</span>
+                        <span class="detail-value">{{ entry.song_count }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Fav Song:</span>
+                        <span class="detail-value">{{ entry.fav_song }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Fav Album:</span>
+                        <span class="detail-value">{{ entry.fav_album }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Fav Era:</span>
+                        <span class="detail-value">{{ entry.fav_era }}</span>
+                    </div>
+                </div>
+
+                <div class="memory-section">
+                    <p class="memory-label">Favorite Memory</p>
+                    <p class="detail-value">{{ entry.fav_memory }}</p>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</body>
+</html>
