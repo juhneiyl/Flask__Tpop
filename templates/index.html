@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Pop Favorites</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, msg in messages %}
+                <div class="flash {{ category }}">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="header">
+            <h1>T-pop Favorites</h1>
+            <p class="subtitle">Share your love for Thai pop music.</p>
+        </div>
+
+        <form method="POST" action="/submit">
+
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Favorite Group/Artist</label>
+                <input type="text" name="fav_group" placeholder="e.g., BUS, 4EVE, ATLAS" required>
+            </div>
+
+            <div class="form-group">
+                <label>Your Bias</label>
+                <input type="text" name="bias" placeholder="Favorite member" required>
+            </div>
+
+            <div class="form-group">
+                <label>Bias Wrecker</label>
+                <input type="text" name="bias_wrecker" placeholder="That one member who wrecks your bias list" required>
+            </div>
+
+            <div class="form-group">
+                <label>How many songs do they have?</label>
+                <input type="number" name="song_count" placeholder="Approximate number"required>
+            </div>
+
+            <div class="form-group">
+                <label>Your favorite song</label>
+                <input type="text" name="fav_song" placeholder="That one song you play on repeat"required>
+            </div>
+
+            <div class="form-group">
+                <label>Favorite Album</label>
+                <input type="text" name="fav_album" placeholder="Best album ever">
+            </div>
+
+            <div class="form-group">
+                <label>Favorite Era</label>
+                <input type="text" name="fav_era" placeholder="Eg., Debut era, 2023 comeback" required>
+            </div>
+
+            <div class="form-group">
+                <label>Stan since when?</label>
+                <input type="text" name="stan_since" placeholder="Eg., 2021, since debut" required>
+            </div>
+
+            <div class="form-group">
+                <label>Favorite memory</label>
+                <textarea name="fav_memory" placeholder="Share your favorite memory of this group" required></textarea>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="view-link">
+            <a href="/entries">See What Others Love</a>
+        </div>
+
+    </div>
+</body>
+</html>
