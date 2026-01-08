@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
@@ -70,3 +71,4 @@ if __name__ == '__main__':
         db.create_all()
 
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+
