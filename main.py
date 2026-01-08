@@ -6,18 +6,15 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "janelle"
 
-# Get DATABASE_URL from Railway or fallback to local MySQL
 database_url = os.environ.get('DATABASE_URL')
 if database_url and database_url.startswith('mysql://'):
     database_url = database_url.replace('mysql://', 'mysql+pymysql://', 1)
-
-# Fallback (make sure your local DB exists if running locally)
+    
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'mysql+pymysql://root:@localhost/tpop_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Model
 class TpopEntry(db.Model):
     __tablename__ = 'tpop_entry'
     id = db.Column(db.Integer, primary_key=True)
@@ -33,11 +30,9 @@ class TpopEntry(db.Model):
     stan_since = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-# Ensure tables exist
 with app.app_context():
     db.create_all()
 
-# Routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -71,7 +66,6 @@ def entries():
     all_entries = TpopEntry.query.order_by(TpopEntry.created_at.desc()).all()
     return render_template('entries.html', entries=all_entries)
 
-# Quick test route for DB connection
 @app.route('/test-db')
 def test_db():
     try:
@@ -83,3 +77,4 @@ def test_db():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+
