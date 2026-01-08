@@ -1,75 +1,52 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+# main.py
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = "janelle"
+# DATABASE CONFIG
+DB_USER = os.environ.get("MYSQL_USER", "root")
+DB_PASSWORD = os.environ.get("MYSQL_PASSWORD", "password")
+DB_HOST = os.environ.get("MYSQL_HOST", "localhost")
+DB_NAME = os.environ.get("MYSQL_DB", "railway")
 
-database_url = os.environ.get('DATABASE_URL')
-if database_url and database_url.startswith('mysql://'):
-    database_url = database_url.replace('mysql://', 'mysql+pymysql://', 1)
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'mysql+pymysql://root:@localhost/tpop_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
+# MODEL
 class TpopEntry(db.Model):
-    __tablename__ = 'tpop_entry'
+    __tablename__ = "tpop_entry"
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    fav_group = db.Column(db.String(100), nullable=False)
-    bias = db.Column(db.String(100), nullable=False)
-    bias_wrecker = db.Column(db.String(100), nullable=False)
-    song_count = db.Column(db.Integer, nullable=False)
-    fav_song = db.Column(db.String(200), nullable=False)
-    fav_album = db.Column(db.String(200), nullable=True)
-    fav_era = db.Column(db.String(100), nullable=False)
-    fav_memory = db.Column(db.Text, nullable=False)
-    stan_since = db.Column(db.String(50), nullable=False)
+    fav_group = db.Column(db.String(100))
+    bias = db.Column(db.String(100))
+    bias_wrecker = db.Column(db.String(100))
+    song_count = db.Column(db.Integer)
+    fav_song = db.Column(db.String(200))
+    fav_album = db.Column(db.String(200))
+    fav_era = db.Column(db.String(50))
+    fav_memory = db.Column(db.String(200))
+    stan_since = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# ROUTES
 @app.route('/')
-def index():
-    return render_template('index.html')
-
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    try:
-        entry = TpopEntry(
-            name=request.form['name'],
-            fav_group=request.form['fav_group'],
-            bias=request.form['bias'],
-            bias_wrecker=request.form['bias_wrecker'],
-            song_count=int(request.form['song_count']),
-            fav_song=request.form['fav_song'],
-            fav_album=request.form.get('fav_album'),
-            fav_era=request.form.get('fav_era'),
-            fav_memory=request.form['fav_memory'],
-            stan_since=request.form.get('stan_since')
-        )
-
-        db.session.add(entry)
-        db.session.commit()
-        flash("Thanks for sharing your T-pop love!", "success")
-
-    except Exception as e:
-        db.session.rollback()
-        print("ERROR:", e)
-        flash("Something went wrong. Please try again.", "error")
-
-    return redirect(url_for('index'))
-
+def home():
+    return "Welcome to T-Pop Favorites App!"
 
 @app.route('/entries')
 def entries():
+    # Ensure table exists
+    db.create_all()
+    
     all_entries = TpopEntry.query.order_by(TpopEntry.created_at.desc()).all()
-    return render_template('entries.html', entries=all_entries)
+    return render_template("entries.html", entries=all_entries)
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
-
-
+# RUN
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=True)
