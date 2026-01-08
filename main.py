@@ -6,9 +6,10 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "janelle"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/tpop_db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+database_url = os.environ.get('DATABASE_URL')
+if database_url and database_url.startswith('mysql://'):
+    database_url = database_url.replace('mysql://', 'mysql+pymysql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'mysql+pymysql://root:@localhost/tpop_db'
 db = SQLAlchemy(app)
 
 class TpopEntry(db.Model):
@@ -67,4 +68,5 @@ def entries():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
