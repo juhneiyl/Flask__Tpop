@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'mysql+pymysql://root:@l
 db = SQLAlchemy(app)
 
 class TpopEntry(db.Model):
-    _tablename_ = 'tpop_entry'
+    __tablename__ = 'tpop_entry'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     fav_group = db.Column(db.String(100), nullable=False)
@@ -71,4 +71,5 @@ if __name__ == '__main__':
         db.create_all()
 
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+
 
