@@ -95,22 +95,6 @@
                     <p class="memory-label">Favorite Memory</p>
                     <p class="detail-value">{{ entry.fav_memory }}</p>
                 </div>
-
-                    {% if entry is defined and entry|attr('youtube_link') %}
-                    <div class="youtube-section">
-                        <p class="youtube-label">Favorite Video</p>
-                        {% set yt = entry|attr('youtube_link') %}
-                        {% set video_id = yt.split('v=')[1].split('&')[0] if 'v=' in yt else yt.split('/')[-1] %}
-                        <div class="youtube-embed">
-                            <iframe
-                                src="https://www.youtube.com/embed/{{ video_id }}"
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                    </div>
-                    {% endif %}
                 
                         <button class="heart-btn" onclick="toggleReaction({{ entry.id }})">
                         <span class="heart-icon">❤️</span>
