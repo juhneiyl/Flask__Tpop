@@ -10,17 +10,48 @@
 <body>
     <div class="container-wide">
 
-        <div class="back-link">
-            <a href="/">← Back to Form</a>
+        <div class="top-nav">
+            <a href="/" class="nav-link"> Back to Form</a>
+            <a href="/stats" class="nav-link stats-btn"> View Stats</a>
         </div>
 
         <h1 class="main-title">T-Pop Entries</h1>
         <p class="main-subtitle">See what other fans love</p>
 
+        <div class="search-filter-section">
+            <form method="GET" action="/entries" class="filter-form">
+                <div class="search-box">
+                    <input type="text" name="search" placeholder="Search by group, bias, song, or name..." value="{{ search }}" class="search-input">
+                </div>
+                
+                <div class="filter-box">
+                    <select name="group" class="filter-select">
+                        <option value="">All Groups</option>
+                        {% for group in groups %}
+                            <option value="{{ group }}" {% if filter_group == group %}selected{% endif %}>{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <button type="submit" class="filter-btn">Apply</button>
+                <a href="/entries" class="clear-btn">Clear</a>
+            </form>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, msg in messages %}
+                    <div class="flash {{ category }}">{{ msg }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
         <div class="entries-grid">
 
             {% for entry in entries %}
-            <div class="entry-card">
+            <div class="entry-card" data-entry-id="{{ entry.id }}">
 
                 <div class="entry-header">
                     <p class="fan-name">{{ entry.name }}</p>
@@ -60,9 +91,52 @@
                     </div>
                 </div>
 
+                {% if entry.youtube_link %}
+                <div class="youtube-section">
+                    <p class="youtube-label"> Favorite Video</p>
+                    {% set video_id = entry.youtube_link.split('v=')[1].split('&')[0] if 'v=' in entry.youtube_link else entry.youtube_link.split('/')[-1] %}
+                    <div class="youtube-embed">
+                        <iframe 
+                            src="https://www.youtube.com/embed/{{ video_id }}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                {% endif %}
+
                 <div class="memory-section">
                     <p class="memory-label">Favorite Memory</p>
                     <p class="detail-value">{{ entry.fav_memory }}</p>
+                </div>
+                
+                <div class="reaction-section">
+                    <button class="heart-btn" onclick="toggleReaction({{ entry.id }})">
+                        <span class="heart-icon">❤️</span>
+                        <span class="heart-count" id="heart-count-{{ entry.id }}">{{ entry.reaction_count }}</span>
+                    </button>
+                    <button class="comment-toggle-btn" onclick="toggleComments({{ entry.id }})">
+                        💬 <span id="comment-count-{{ entry.id }}">{{ entry.comment_count }}</span> Comments
+                    </button>
+                </div>
+
+                <div class="comments-section" id="comments-{{ entry.id }}" style="display: none;">
+                    <div class="comments-list">
+                        {% for comment in entry.comments %}
+                        <div class="comment-item">
+                            <p class="comment-author">{{ comment.commenter_name }}</p>
+                            <p class="comment-text">{{ comment.comment_text }}</p>
+                            <p class="comment-time">{{ comment.created_at.strftime('%b %d, %Y') }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <form method="POST" action="/comment/{{ entry.id }}" class="comment-form">
+                        <input type="text" name="commenter_name" placeholder="Your name" required class="comment-input">
+                        <textarea name="comment_text" placeholder="Leave a comment..." required class="comment-textarea"></textarea>
+                        <button type="submit" class="comment-submit-btn">Post Comment</button>
+                    </form>
                 </div>
 
             </div>
@@ -71,5 +145,61 @@
         </div>
 
     </div>
+
+    <script>
+        function getUserId() {
+            let userId = localStorage.getItem('tpop_user_id');
+            if (!userId) {
+                userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('tpop_user_id', userId);
+            }
+            return userId;
+        }
+
+        async function toggleReaction(entryId) {
+            const userId = getUserId();
+            
+            try {
+                const response = await fetch(`/react/${entryId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_identifier: userId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const countEl = document.getElementById(`heart-count-${entryId}`);
+                    countEl.textContent = data.count;
+                    
+                    const btn = countEl.closest('.heart-btn');
+                    if (data.action === 'added') {
+                        btn.classList.add('liked');
+                        btn.style.animation = 'heartPop 0.3s ease';
+                    } else {
+                        btn.classList.remove('liked');
+                    }
+                    setTimeout(() => btn.style.animation = '', 300);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function toggleComments(entryId) {
+            const commentsSection = document.getElementById(`comments-${entryId}`);
+            if (commentsSection.style.display === 'none') {
+                commentsSection.style.display = 'block';
+            } else {
+                commentsSection.style.display = 'none';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const userId = getUserId();
+        });
+    </script>
 </body>
 </html>
