@@ -107,7 +107,7 @@ body::before {
 .filter-select {
     width: 100%;
     padding: 14px 18px;
-    padding-right: 30px;
+    padding-left: 30px;
     border: 2px solid #e8e8e8;
     border-radius: 12px;
     font-size: 15px;
