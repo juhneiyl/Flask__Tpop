@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Pop Stats</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stats.css') }}">
+</head>
+
+<body>
+    <div class="stats-container">
+        
+        <div class="top-nav">
+            <a href="/" class="nav-link">Back to Form</a>
+            <a href="/entries" class="nav-link">View Entries</a>
+        </div>
+
+        <h1 class="stats-title">T-Pop Community Stats</h1>
+        <p class="stats-subtitle">See what's trending in the T-pop community</p>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">{{ total_entries }}</div>
+                <div class="stat-label">Total Fans</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">❤️</div>
+                <div class="stat-number">{{ total_reactions }}</div>
+                <div class="stat-label">Total Reactions</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">💬</div>
+                <div class="stat-number">{{ total_comments }}</div>
+                <div class="stat-label">Total Comments</div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 class="section-title"> Most Loved Groups</h2>
+            <p class="section-subtitle">Groups with the most reactions</p>
+            
+            <div class="ranking-list">
+                {% for group, count in popular_groups %}
+                <div class="ranking-item">
+                    <span class="rank">{{ loop.index }}</span>
+                    <div class="rank-info">
+                        <span class="rank-name">{{ group }}</span>
+                        <span class="rank-count">❤️ {{ count }} reactions</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 class="section-title"> Most Popular Biases</h2>
+            <p class="section-subtitle">Fan favorite members</p>
+            
+            <div class="ranking-list">
+                {% for bias, group, count in popular_biases %}
+                <div class="ranking-item">
+                    <span class="rank">{{ loop.index }}</span>
+                    <div class="rank-info">
+                        <span class="rank-name">{{ bias }}</span>
+                        <span class="rank-subtext">from {{ group }}</span>
+                        <span class="rank-count">{{ count }} mentions</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 class="section-title">Top Songs</h2>
+            <p class="section-subtitle">Most loved tracks</p>
+            
+            <div class="ranking-list">
+                {% for song, group, count in popular_songs %}
+                <div class="ranking-item">
+                    <span class="rank">{{ loop.index }}</span>
+                    <div class="rank-info">
+                        <span class="rank-name">{{ song }}</span>
+                        <span class="rank-subtext">by {{ group }}</span>
+                        <span class="rank-count">{{ count }} mentions</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
