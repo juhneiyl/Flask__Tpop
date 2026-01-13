@@ -107,7 +107,6 @@ body::before {
 .filter-select {
     width: 100%;
     padding: 14px 18px;
-    padding-left: 10px;
     border: 1px solid #e8e8e8;
     border-radius: 12px;
     font-size: 15px;
@@ -118,6 +117,10 @@ body::before {
 
 .filter-select {
     padding-left: 5px;
+}
+
+.seach-input {
+    padding-left: 10px;
 }
 
 .search-input:focus,
