@@ -29,7 +29,6 @@ class TpopEntry(db.Model):
     fav_era = db.Column(db.String(100), nullable=False)
     fav_memory = db.Column(db.Text, nullable=False)
     stan_since = db.Column(db.String(50), nullable=False)
-    youtube_link = db.Column(db.String(300), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     reactions = db.relationship('Reaction', backref='entry', lazy=True, cascade='all, delete-orphan')
@@ -70,8 +69,7 @@ def submit():
             fav_album=request.form.get('fav_album'),
             fav_era=request.form.get('fav_era'),
             fav_memory=request.form['fav_memory'],
-            stan_since=request.form.get('stan_since'),
-            youtube_link=request.form.get('youtube_link')
+            stan_since=request.form.get('stan_since')
         )
         db.session.add(entry)
         db.session.commit()
@@ -149,16 +147,13 @@ def stats():
 def react(entry_id):
     user_id = request.json.get('user_identifier', 'anonymous')
     
-    # Check if user already reacted
     existing = Reaction.query.filter_by(entry_id=entry_id, user_identifier=user_id).first()
     
     if existing:
-        # Unlike
         db.session.delete(existing)
         db.session.commit()
         action = 'removed'
     else:
-        # Like
         reaction = Reaction(entry_id=entry_id, user_identifier=user_id)
         db.session.add(reaction)
         db.session.commit()
@@ -203,3 +198,4 @@ def test_db():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+
