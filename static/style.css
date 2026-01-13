@@ -64,6 +64,7 @@ h1 {
 .form-group:nth-child(8) { animation-delay: 0.45s; }
 .form-group:nth-child(9) { animation-delay: 0.5s; }
 .form-group:nth-child(10) { animation-delay: 0.55s; }
+.form-group:nth-child(11) { animation-delay: 0.6s; }
 
 label {
     display: block;
@@ -75,6 +76,7 @@ label {
 
 input[type="text"],
 input[type="number"],
+input[type="url"],
 textarea {
     width: 100%;
     padding: 16px 18px;
@@ -149,13 +151,15 @@ button:active {
     box-shadow: 0 4px 15px rgba(201,42,42,0.15);
 }
 
-.view-link {
-    text-align: center;
+.view-links {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
     margin-top: 32px;
     animation: fadeIn 0.8s ease-out 0.6s backwards;
 }
 
-.view-link a {
+.view-links a {
     color: #667eea;
     font-weight: 700;
     font-size: 16px;
@@ -166,12 +170,19 @@ button:active {
     background: rgba(102,126,234,0.1);
     display: inline-block;
     border: 2px solid transparent;
+    flex: 1;
+    text-align: center;
 }
 
-.view-link a:hover {
+.view-links a:hover {
     color: #764ba2;
     background: rgba(102,126,234,0.15);
     transform: translateY(-2px);
+}
+
+.stats-link {
+    background: rgba(240,147,251,0.15) !important;
+    color: #764ba2 !important;
 }
 
 @keyframes fadeIn {
@@ -219,6 +230,10 @@ button:active {
     .subtitle {
         font-size: 14px;
     }
+
+    .view-links {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 480px) {
@@ -237,6 +252,7 @@ button:active {
 
     input[type="text"],
     input[type="number"],
+    input[type="url"],
     textarea {
         padding: 14px 16px;
         font-size: 14px;
