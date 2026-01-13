@@ -113,7 +113,7 @@ body::before {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: white;
     transition: all 0.3s ease;
-    padding-right: 10px;
+    padding-right: 30px;
 }
 
 .search-input:focus,
