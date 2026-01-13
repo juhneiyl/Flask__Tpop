@@ -90,18 +90,24 @@
                         <span class="detail-value">{{ entry.fav_era }}</span>
                     </div>
                 </div>
-
+                
                 <div class="memory-section">
                     <p class="memory-label">Favorite Memory</p>
                     <p class="detail-value">{{ entry.fav_memory }}</p>
                 </div>
                 
-                        <button class="heart-btn" onclick="toggleReaction({{ entry.id }})">
+                <div class="reaction-section">
+                    <button class="heart-btn" onclick="toggleReaction({{ entry.id }})">
                         <span class="heart-icon">❤️</span>
-                        <span class="heart-count" id="heart-count-{{ entry.id }}">{{ entry.reaction_count }}</span>
+                        <span class="heart-count" id="heart-count-{{ entry.id }}">
+                            {{ entry.reaction_count }}
+                        </span>
                     </button>
+                
                     <button class="comment-toggle-btn" onclick="toggleComments({{ entry.id }})">
-                        💬 <span id="comment-count-{{ entry.id }}">{{ entry.comment_count }}</span> Comments
+                        💬 <span id="comment-count-{{ entry.id }}">
+                            {{ entry.comment_count }}
+                        </span> Comments
                     </button>
                 </div>
 
