@@ -101,7 +101,6 @@ body::before {
     grid-template-columns: 1fr 200px auto auto;
     gap: 15px;
     align-items: end;
-    padding-right: 15px;
 }
 
 .search-input,
@@ -114,6 +113,7 @@ body::before {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: white;
     transition: all 0.3s ease;
+    padding-right: 10px;
 }
 
 .search-input:focus,
