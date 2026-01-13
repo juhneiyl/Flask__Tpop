@@ -119,10 +119,6 @@ body::before {
     padding-left: 5px;
 }
 
-.search-input {
-    padding-left: 10px;
-}
-
 .search-input:focus,
 .filter-select:focus {
     outline: none;
